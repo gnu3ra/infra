@@ -2,7 +2,7 @@ ARG IDF_VERSION=release-v5.1
 FROM registry.ballmerlabs.net/rusts:latest as rustanalyzerbuild 
    
 # Build espressif image with rust tooling
-FROM  espressif/idf:$IDF_VERSION
+FROM  docker.io/espressif/idf:$IDF_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y  build-essential python3 python3-pip python3-virtualenv \
      git fish clang clangd pkg-config libudev-dev fontconfig libfontconfig1-dev libssl-dev socat screen
@@ -23,7 +23,7 @@ COPY --from=rustanalyzerbuild /opt/cargo /opt/cargo
 COPY --from=rustanalyzerbuild /opt/rustup /opt/rustup
 COPY --from=rustanalyzerbuild /root/.config/helix /root/.config/helix
 COPY --from=rustanalyzerbuild /opt/helix/runtime /root/.config/helix/runtime
-RUN cargo install --locked cargo-generate ldproxy espflash espmonitor cargo-espflash cargo-edit
+RUN cargo install cargo-generate ldproxy espflash espmonitor cargo-edit
 
 RUN curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py && \
 python3 get-platformio.py
